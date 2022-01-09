@@ -12,6 +12,32 @@ django.setup()
 from datacenter.models import Passcard, Visit  # noqa: E402
 
 
+def get_duration(visit):
+    now = localtime().replace(microsecond=0)
+    entered_time = localtime(visit.entered_at)
+    leaved_time = localtime(visit.leaved_at)
+    if not visit.leaved_at:
+        delta = now - entered_time
+    else:
+        delta = leaved_time - entered_time
+    return delta
+
+
+def is_visit_long(visit, minutes=60):
+    visit_time_in_min = (int(get_duration(visit).total_seconds()))/60
+    if visit_time_in_min > minutes:
+        return True
+    return False
+
+
+def get_strange_visits(visits):
+    strange_visits = []
+    for visit in visits:
+        if is_visit_long(visit, minutes=100):
+            strange_visits.append(visit)
+    return strange_visits
+
+
 if __name__ == '__main__':
     # Программируем здесь
     #print('Всего пропусков:', Passcard.objects.count())  # noqa: T001
@@ -34,6 +60,5 @@ if __name__ == '__main__':
         # print('Находится в хранилище:\n', f'{hours}:{minutes}:{secs}')
     all_cards = Passcard.objects.all()
     test_card = all_cards[7]
-    print(test_card)
     test_visits = Visit.objects.filter(passcard=test_card)
-    print(test_visits)
+    print("Визиты дольше 100 минут:", get_strange_visits(test_visits)) 
