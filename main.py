@@ -30,5 +30,6 @@ if __name__ == '__main__':
         minutes = (seconds % 3600) // 60
         secs = (seconds % 3600) % 60
         a = datetime.timedelta(hours, minutes, secs)
-        print('Зашел в хранилище, время по Москве:\n', entered_time, '\n')
-        print('Находится в хранилище:\n', f'{hours}:{minutes}:{secs}')
+        print(visit.passcard)
+        # print('Зашел в хранилище, время по Москве:\n', entered_time, '\n')
+        # print('Находится в хранилище:\n', f'{hours}:{minutes}:{secs}')
